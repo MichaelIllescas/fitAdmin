@@ -1,8 +1,3 @@
-// 🚩 Protección para evitar bucles infinitos
-if (!process.env.ELECTRON_CHILD) {
-  console.error("⚠️ Este backend solo debe ejecutarse desde Electron.")
-  process.exit(1)
-}
 
 const express = require('express');
 const cors = require('cors');

@@ -1,0 +1,24 @@
+.dashboard {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-background {
+  position: absolute;
+  inset: 0;
+  background-image: url('/fit-admin-frontend/src/assets/img/logo.jpg') !important; 
+  background-size: cover;
+
+
+}
+
+.dashboard-content {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+}
+
+.div-img{
+    background-color: #000 !important;
+}

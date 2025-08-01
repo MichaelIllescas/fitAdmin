@@ -1,0 +1,16 @@
+# Ignorar dependencias
+/node_modules/
+/node/
+
+/frontend/node_modules
+/backend/node_modules
+
+# Logs
+*.log
+
+# Builds
+/dist
+/build
+
+# Archivos de entorno
+.env

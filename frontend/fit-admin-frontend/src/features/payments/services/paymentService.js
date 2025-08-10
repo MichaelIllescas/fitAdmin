@@ -1,29 +1,26 @@
 import apiClient from '../../../config/config'
 
 export const searchMember = (query) => {
-  return apiClient.get(`/api/payments/searchMember?query=${query}`)
+  return apiClient.invoke('payments:searchMember', query)
 }
 
 export const registerPayment = (data) => {
-  return apiClient.post('/api/payments/register', data)
+  return apiClient.invoke('payments:register', data)
 }
 
-
 export const getAllPayments = () => {
-  return apiClient.get('/api/payments/getAll')
+  return apiClient.invoke('payments:list')
 }
 
 export const deletePayment = (id) => {
-  return apiClient.delete(`/api/payments/delete/${id}`)
+  return apiClient.invoke('payments:delete', id)
 }
 
-export const updatePayment = (id, data) =>{
-return apiClient.put(`/api/payments/update/${id}`, data)
+export const updatePayment = (id, data) => {
+  return apiClient.invoke('payments:update', { id, data })
+}
 
-} 
-
-export const getPaymentsByQuery = async (query) => {
-  const res = await apiClient.get(`/api/payments/search?query=${query}`)
-  return res.data
+export const getPaymentsByQuery = (query) => {
+  return apiClient.invoke('payments:search', query)
 }
   

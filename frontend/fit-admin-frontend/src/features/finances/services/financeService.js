@@ -1,28 +1,21 @@
 import apiClient from '../../../config/config'
 
-export const fetchDailyIncome = async (date) => {
-  const res = await apiClient.get(`/api/reports/dailyIncome?date=${date}`)
-  return res.data
+export const fetchDailyIncome = (date) => {
+  return apiClient.invoke('reports:dailyIncome', date)
 }
 
-export const fetchMonthlyIncomes = async (year) => {
-  const res = await apiClient.get(`/api/reports/monthlyIncomes?year=${year}`)
-  return res.data
+export const fetchMonthlyIncomes = (year) => {
+  return apiClient.invoke('reports:monthlyIncomes', year)
 }
 
-export const fetchMonthlyExpenses = async (year) => {
-  const res = await apiClient.get(`/api/reports/monthlyExpenses?year=${year}`)
-  return res.data
+export const fetchMonthlyExpenses = (year) => {
+  return apiClient.invoke('reports:monthlyExpenses', year)
 }
 
-export const fetchAnnualProfit = async () => {
-  const res = await apiClient.get('/api/reports/annualProfit')
-  return res.data
+export const fetchAnnualProfit = () => {
+  return apiClient.invoke('reports:annualProfit')
 }
 
-export const getMonthlyFinanceByYear = async (year) => {
-  const res = await apiClient.get(`api/reports/monthly`, {
-    params: { year }
-  })
-  return res.data // se espera un array [{ month, income, expense }, ...]
+export const getMonthlyFinanceByYear = (year) => {
+  return apiClient.invoke('reports:monthly', year)
 }

@@ -1,28 +1,20 @@
 import apiClient from '../../config/config'
 
-const registerMember = async (memberData) => {
-  const response = await apiClient.post('/api/members/register', memberData)
-  return response.data
+const registerMember = (memberData) => {
+  return apiClient.invoke('members:register', memberData)
 }
 
-const getAllMembers = async () => {
-  const response = await apiClient.get('/api/members/getAll')
-  return response.data
+const getAllMembers = () => {
+  return apiClient.invoke('members:list')
 }
 
-const searchMember = async (query) => {
-  const response = await apiClient.get('/api/members/search', {
-    params: { query }
-  })
-  return response.data
+const searchMember = (query) => {
+  return apiClient.invoke('members:search', query)
 }
 
-
- const registerAssistance = async (data) => {
-  const response = await apiClient.post('/api/assistances/register', data)
-  return response.data
+const registerAssistance = (data) => {
+  return apiClient.invoke('assistances:register', data)
 }
-
 
 export default {
   registerMember,

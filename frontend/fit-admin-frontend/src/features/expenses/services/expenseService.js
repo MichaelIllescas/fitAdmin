@@ -1,28 +1,23 @@
 import apiClient from '../../../config/config'
 
-const registerExpense = async (expenseData) => {
-  const response = await apiClient.post('/api/expenses/register', expenseData)
-  return response.data
+const registerExpense = (expenseData) => {
+  return apiClient.invoke('expenses:register', expenseData)
 }
 
-const getAllExpenses = async () => {
-  const response = await apiClient.get('/api/expenses/getAll')
-  return response.data
+const getAllExpenses = () => {
+  return apiClient.invoke('expenses:list')
 }
 
-const getExpenseById = async (id) => {
-  const response = await apiClient.get(`/api/expenses/getById/${id}`)
-  return response.data
+const getExpenseById = (id) => {
+  return apiClient.invoke('expenses:getById', id)
 }
 
-const updateExpense = async (id, data) => {
-  const response = await apiClient.put(`/api/expenses/update/${id}`, data)
-  return response.data
+const updateExpense = (id, data) => {
+  return apiClient.invoke('expenses:update', { id, data })
 }
 
-const deleteExpense = async (id) => {
-  const response = await apiClient.delete(`/api/expenses/delete/${id}`)
-  return response.data
+const deleteExpense = (id) => {
+  return apiClient.invoke('expenses:delete', id)
 }
 
 export default {

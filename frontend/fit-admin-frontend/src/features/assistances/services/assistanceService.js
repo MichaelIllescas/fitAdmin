@@ -1,28 +1,13 @@
 import apiClient from '../../../config/config'
 
 const assistanceService = {
-searchMember: (query) =>
-  apiClient.get('/api/members/search', {
-    params: { query }  
-  }),
-  getHistoryByMemberId: (id) =>
-    apiClient.get(`/api/assistances/getByMember/${id}`),
-
-  registerAssistance: (memberId) =>
-    apiClient.post(`/api/assistances/register`, { memberId }),
-
-  updateAssistance: (id, data) =>
-    apiClient.put(`/api/assistances/${id}`, data),
-
-  deleteAssistance: (id) => apiClient.delete(`/api/assistances/delete/${id}`), 
-
-
-  annulAssistance: (id) =>
-    apiClient.patch(`/api/assistances/${id}/annul`),
-
-
-  getByDate: (date) => apiClient.get(`/api/assistances/by-date/${date}`)
-
+  searchMember: (query) => apiClient.invoke('members:search', query),
+  getHistoryByMemberId: (id) => apiClient.invoke('assistances:byMember', id),
+  registerAssistance: (memberId) => apiClient.invoke('assistances:register', { memberId }),
+  updateAssistance: (id, data) => apiClient.invoke('assistances:update', { id, data }),
+  deleteAssistance: (id) => apiClient.invoke('assistances:delete', id),
+  annulAssistance: (id) => apiClient.invoke('assistances:annul', id),
+  getByDate: (date) => apiClient.invoke('assistances:byDate', date)
 }
 
 export default assistanceService

@@ -1,10 +1,5 @@
-import axios from 'axios';
-
-const apiClient = axios.create({
-  baseURL: 'http://localhost:3001', // cambia esto si lo desplegás
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const apiClient = {
+  invoke: (channel, data) => window.api.invoke(channel, data)
+}
 
 export default apiClient;

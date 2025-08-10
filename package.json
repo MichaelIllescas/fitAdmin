@@ -4,7 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build:frontend": "npm --prefix frontend/fit-admin-frontend run build",
+    "build": "npm run build:frontend && electron-builder"
   },
   "build": {
     "appId": "com.tuempresa.fitadmin",
@@ -12,11 +13,11 @@
     "asar": false,
     "files": [
       "main.js",
+      "preload.js",
       "backend/**/*",
       "frontend/dist/**/*",
       "database.sqlite",
-      "icono.ico",
-      "node/**"
+      "icono.ico"
     ],
     "directories": {
       "buildResources": "assets"

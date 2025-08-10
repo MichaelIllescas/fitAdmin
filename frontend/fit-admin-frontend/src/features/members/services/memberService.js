@@ -1,22 +1,18 @@
 import apiClient from "../../../config/config";
 
-const registerMember = async (memberData) => {
-  const response = await apiClient.post("/api/members/register", memberData);
-  return response.data;
+const registerMember = (memberData) => {
+  return apiClient.invoke("members:register", memberData);
 };
 
-const getAllMembers = async () => {
-  const response = await apiClient.get("/api/members/getAll");
-  return response.data;
+const getAllMembers = () => {
+  return apiClient.invoke("members:list");
 };
 
 const updateMember = (id, data) => {
-  const response = apiClient.put(`/api/members/update/${id}`, data);
-  return response.data;
+  return apiClient.invoke("members:update", { id, data });
 };
 const deleteMember = (id) => {
-  const response = apiClient.delete(`/api/members/delete/${id}`);
-  return response.data;
+  return apiClient.invoke("members:delete", id);
 };
 export default {
   registerMember,

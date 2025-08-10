@@ -1,9 +1,8 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
-const { spawn } = require('child_process')
+const backend = require('./backend/fitadmin-backend')
 
 let win
-let backendProcess
 
 function createWindow() {
   win = new BrowserWindow({
@@ -12,6 +11,8 @@ function createWindow() {
     icon: path.join(app.isPackaged ? process.resourcesPath : __dirname, 'icono.ico'),
     webPreferences: {
       nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(app.isPackaged ? process.resourcesPath : __dirname, 'preload.js')
     }
   })
 
@@ -24,47 +25,52 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
-  const backendPath = app.isPackaged
-    ? path.join(process.resourcesPath, 'app', 'backend', 'index.js')
-    : path.join(__dirname, 'backend', 'index.js')
+app.whenReady().then(async () => {
+  await backend.initDatabase()
 
-  const nodeExec = app.isPackaged
-    ? path.join(process.resourcesPath, 'app', 'node', 'node.exe')
-    : process.execPath
+  ipcMain.handle('members:list', () => backend.members.list())
+  ipcMain.handle('members:register', (_, data) => backend.members.register(data))
+  ipcMain.handle('members:update', (_, payload) => backend.members.update(payload.id, payload.data))
+  ipcMain.handle('members:delete', (_, id) => backend.members.delete(id))
+  ipcMain.handle('members:search', (_, query) => backend.members.search(query))
 
-  console.log('Ejecutando backend desde:', backendPath)
+  ipcMain.handle('feeTypes:register', (_, data) => backend.feeTypes.register(data))
+  ipcMain.handle('feeTypes:list', () => backend.feeTypes.list())
+  ipcMain.handle('feeTypes:update', (_, payload) => backend.feeTypes.update(payload.id, payload.data))
+  ipcMain.handle('feeTypes:delete', (_, id) => backend.feeTypes.delete(id))
 
-  // 🚀 Levantar backend ocultando la consola negra
-  backendProcess = spawn(nodeExec, [backendPath], {
-    cwd: app.isPackaged ? path.join(process.resourcesPath, 'app') : __dirname,
-    stdio: ['pipe', 'pipe', 'pipe'],
-    windowsHide: true // 👈 oculta la consola CMD en Windows
-  })
+  ipcMain.handle('assistances:register', (_, data) => backend.assistances.register(data))
+  ipcMain.handle('assistances:list', () => backend.assistances.list())
+  ipcMain.handle('assistances:byMember', (_, id) => backend.assistances.byMember(id))
+  ipcMain.handle('assistances:delete', (_, id) => backend.assistances.delete(id))
+  ipcMain.handle('assistances:update', (_, payload) => backend.assistances.update(payload.id, payload.data))
+  ipcMain.handle('assistances:annul', (_, id) => backend.assistances.annul(id))
+  ipcMain.handle('assistances:byDate', (_, date) => backend.assistances.byDate(date))
 
-  // Redirigir logs a la consola de Electron
-  backendProcess.stdout.on('data', data => {
-    console.log(`[BACKEND]: ${data.toString()}`)
-  })
+  ipcMain.handle('payments:searchMember', (_, query) => backend.payments.searchMember(query))
+  ipcMain.handle('payments:register', (_, data) => backend.payments.register(data))
+  ipcMain.handle('payments:list', () => backend.payments.list())
+  ipcMain.handle('payments:delete', (_, id) => backend.payments.delete(id))
+  ipcMain.handle('payments:update', (_, payload) => backend.payments.update(payload.id, payload.data))
+  ipcMain.handle('payments:search', (_, query) => backend.payments.search(query))
 
-  backendProcess.stderr.on('data', data => {
-    console.error(`[BACKEND ERROR]: ${data.toString()}`)
-  })
+  ipcMain.handle('expenses:register', (_, data) => backend.expenses.register(data))
+  ipcMain.handle('expenses:list', () => backend.expenses.list())
+  ipcMain.handle('expenses:getById', (_, id) => backend.expenses.getById(id))
+  ipcMain.handle('expenses:update', (_, payload) => backend.expenses.update(payload.id, payload.data))
+  ipcMain.handle('expenses:delete', (_, id) => backend.expenses.delete(id))
 
-  backendProcess.on('close', code => {
-    console.log(`[BACKEND CLOSED] Código: ${code}`)
-  })
-
-  backendProcess.on('error', err => {
-    console.error('Error iniciando backend:', err)
-  })
+  ipcMain.handle('reports:dailyIncome', (_, date) => backend.reports.dailyIncome(date))
+  ipcMain.handle('reports:monthlyIncomes', (_, year) => backend.reports.monthlyIncomes(year))
+  ipcMain.handle('reports:monthlyExpenses', (_, year) => backend.reports.monthlyExpenses(year))
+  ipcMain.handle('reports:annualProfit', () => backend.reports.annualProfit())
+  ipcMain.handle('reports:monthly', (_, year) => backend.reports.monthly(year))
 
   createWindow()
 })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    if (backendProcess) backendProcess.kill()
     app.quit()
   }
 })
